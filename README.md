@@ -8,7 +8,7 @@
 
 ## Quick Start
 
-1. Download `SharedFrequency_PromptStudio_v1.0.html`
+1. Download `index.html`
 2. Open in any browser — Chrome, Firefox, Safari, Edge
 3. Works completely offline. No server. No install.
 
