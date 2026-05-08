@@ -996,19 +996,25 @@ function lockAll() {
   }
 }
 
-// Random: randomizes ALL fields that are NOT locked
+// Random: randomizes all UNLOCKED fields inside panels only (never sidebar controls)
 function randomizeAll() {
-  document.querySelectorAll('select').forEach(sel => {
-    if (!sel.disabled) {
-      sel.selectedIndex = Math.floor(Math.random() * sel.options.length);
+  document.querySelectorAll('.panel select, .panel input[type="range"]').forEach(el => {
+    if (el.disabled) return;                          // skip Locked fields
+    if (el.closest('.custom-input-group')) return;    // skip [+] input rows
+    if (el.tagName === 'SELECT') {
+      el.selectedIndex = Math.floor(Math.random() * el.options.length);
+      el.dispatchEvent(new Event('change'));
+    } else {
+      el.value = Math.floor(Math.random() * (parseInt(el.max) - parseInt(el.min) + 1)) + parseInt(el.min);
+      el.dispatchEvent(new Event('input'));
     }
   });
-  document.querySelectorAll('input[type="range"]').forEach(range => {
-    if (!range.disabled) {
-      range.value = Math.floor(Math.random() * (parseInt(range.max) - parseInt(range.min) + 1)) + parseInt(range.min);
-      range.dispatchEvent(new Event('input'));
-    }
-  });
+  // Also randomize sidebar Shot Angle if not locked
+  const camAngle = document.getElementById('cameraAngle');
+  const camLock  = document.querySelector('.lock-btn[onclick*="cameraAngle"]');
+  if (camAngle && !camAngle.disabled && !(camLock?.classList.contains('locked'))) {
+    camAngle.selectedIndex = Math.floor(Math.random() * camAngle.options.length);
+  }
   generatePrompt();
 }
 
